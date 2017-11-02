@@ -1,7 +1,12 @@
-//variable for keys
+//variable for requirements
 var keys = require("./keys");
 var Twitter = require('twitter');
+var Spotify = require('node-spotify-api');
+
+// needed for user input
 var userInput = process.argv[2];
+
+// commands that can be entered
 var commands = {
     "tweets" : "my-tweets",
     "spotify" : "spotify-this-song",
@@ -31,7 +36,24 @@ client.get('statuses/user_timeline', params, function(error, tweets, response) {
   } else {
       console.log(error);
   }
-
-  
-  
 });
+
+/*****************
+ spotify commands
+ ****************/
+
+var spotify = new Spotify({
+    id: 'd19224dcbf4c43a9871319c46d2c3740',
+    secret: '40dc646fd0aa44cf861b4f05ecd14d85'
+  });
+
+  spotify.search({ type: 'track', query: 'All the Small Things' }, function(err, data) {
+    if (!err) {
+      if(userInput === commands.spotify){
+          console.log(data)
+      } else {
+        return console.log('Error occurred: ' + err);
+      }
+    }
+   
+  });
