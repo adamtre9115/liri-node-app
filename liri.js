@@ -2,9 +2,11 @@
 var keys = require("./keys");
 var Twitter = require('twitter');
 var Spotify = require('node-spotify-api');
+var request = require("request");
 
 // needed for user input
 var userInput = process.argv[2];
+var secTitle = process.argv[3];
 
 // commands that can be entered
 var commands = {
@@ -47,13 +49,26 @@ var spotify = new Spotify({
     secret: '40dc646fd0aa44cf861b4f05ecd14d85'
   });
 
-  spotify.search({ type: 'track', query: 'All the Small Things' }, function(err, data) {
+  spotify.search({ type: 'track', query: secTitle }, function(err, data) {
     if (!err) {
       if(userInput === commands.spotify){
-          console.log(data)
+        console.log("Artist Name: " + data.tracks.items[0].album.artists[0].name)
+        console.log("Song Title: " + data.tracks.items[0].name);
+        console.log("Song Preview Link: " + data.tracks.items[0].preview_url);
+        console.log("Album: " + data.tracks.items[0].album.name);
       } else {
         return console.log('Error occurred: ' + err);
       }
     }
    
+  });
+
+  /********
+   OMDB
+   ********/
+
+  request('http://www.omdbapi.com/?t=' + secTitle + 'i=tt3896198&apikey=116ac5d', function (error, response, body) {
+   if (error){
+     console.log("Something went wrong: " + error);
+   }
   });
